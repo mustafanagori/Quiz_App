@@ -4,7 +4,6 @@ import 'question_model.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key});
-
   @override
   State<Home> createState() => _HomeState();
 }
@@ -14,7 +13,7 @@ class _HomeState extends State<Home> {
   int currentQuestionIndex = 0;
   int score = 0;
   Answer? selectedAnswer;
-  bool isLoading = false; // Added to track loading state
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          "Quiz Apps",
+          "Quiz App",
           style: TextStyle(
             letterSpacing: 2,
           ),
@@ -31,13 +30,16 @@ class _HomeState extends State<Home> {
       ),
       body: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: questionList != null && questionList.isNotEmpty
+          child: questionList.isNotEmpty
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
-                      "Question ${currentQuestionIndex + 1} / ${questionList.length}",
-                      style: TextStyle(fontSize: 25, color: Colors.white),
+                      "Question ${currentQuestionIndex + 1} /  ${questionList.length}",
+                      style: const TextStyle(
+                          fontSize: 28,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w300),
                     ),
                     _questionWidget(),
                     const SizedBox(
@@ -55,25 +57,20 @@ class _HomeState extends State<Home> {
   }
 
   Widget _questionWidget() {
-    return Column(
-      children: [
-        Container(
-          width: double.infinity,
-          child: Container(
-            margin: const EdgeInsets.all(10),
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(7),
-              border: Border.all(color: Colors.deepPurple),
-            ),
-            child: Text(
-              questionList[currentQuestionIndex]?.questionText ??
-                  "No question available",
-              style: const TextStyle(fontSize: 20, color: Colors.white),
-            ),
-          ),
+    return SizedBox(
+      width: double.infinity,
+      child: Container(
+        margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: const Color.fromARGB(255, 205, 187, 235)),
         ),
-      ],
+        child: Text(
+          questionList[currentQuestionIndex].questionText,
+          style: const TextStyle(fontSize: 20, color: Colors.white),
+        ),
+      ),
     );
   }
 
@@ -81,34 +78,40 @@ class _HomeState extends State<Home> {
     return Column(
       children: questionList[currentQuestionIndex]
           .answerList
-          .map((e) => _answerButton(e))
+          .map((item) => _answerButton(item))
           .toList(),
     );
   }
 
   Widget _answerButton(Answer answer) {
     bool isSelected = answer == selectedAnswer;
-    return Container(
-      margin: const EdgeInsets.all(10),
-      width: double.infinity,
-      height: 48,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          shape: const StadiumBorder(),
-          primary: isSelected ? Colors.orange : Colors.white,
-          onPrimary: isSelected ? Colors.white : Colors.black,
-        ),
-        onPressed: () {
-          if (selectedAnswer == null) {
-            if (answer.isCorrect) {
-              score++;
+    return Padding(
+      padding: const EdgeInsets.all(10), // Adjust the margin as needed
+      child: Container(
+        width: double.infinity,
+        height: 48,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: const StadiumBorder(),
+            primary: isSelected ? Colors.orange : Colors.white,
+            onPrimary: isSelected ? Colors.white : Colors.black,
+          ),
+          onPressed: () {
+            if (selectedAnswer == null) {
+              if (answer.isCorrect) {
+                score++;
+              }
+              setState(() {
+                selectedAnswer = answer;
+              });
+            } else {
+              setState(() {
+                selectedAnswer = answer;
+              });
             }
-            setState(() {
-              selectedAnswer = answer;
-            });
-          }
-        },
-        child: Text(answer.answerText),
+          },
+          child: Text(answer.answerText),
+        ),
       ),
     );
   }
