@@ -118,17 +118,12 @@ class _HomeState extends State<Home> {
 
   Widget _nextButton() {
     bool isLastQuestion = currentQuestionIndex == questionList.length - 1;
-    if (isLastQuestion) {
-      setState(() {
-        isLoading = true;
-      });
-    }
     return Container(
       margin: const EdgeInsets.all(10),
       width: double.infinity,
       height: 48,
       child: ElevatedButton(
-        child: Text(isLoading ? "Submit" : "Next"),
+        child: Text(isLastQuestion ? "Submit" : "Next"),
         style: ElevatedButton.styleFrom(
           shape: const StadiumBorder(),
           primary: Colors.blueAccent,
@@ -155,9 +150,11 @@ class _HomeState extends State<Home> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(
-          "$title | Score is $score",
-          style: TextStyle(color: isPassed ? Colors.green : Colors.red),
+        title: Center(
+          child: Text(
+            "$title | Score is $score",
+            style: TextStyle(color: isPassed ? Colors.green : Colors.red),
+          ),
         ),
         content: Container(
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
